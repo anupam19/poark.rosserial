@@ -258,7 +258,8 @@ macro(setup_arduino_compiler BOARD_ID)
         set(BOARD_CORE_PATH ${ARDUINO_CORES_PATH}/${BOARD_CORE})
         include_directories(${BOARD_CORE_PATH})
         include_directories(${ARDUINO_LIBRARIES_PATH})
-        add_definitions(-DF_CPU=${${BOARD_ID}.build.f_cpu}
+        add_definitions(-Os -fdata-sections -ffunction-sections
+                        -DF_CPU=${${BOARD_ID}.build.f_cpu}
                         -DARDUINO=${ARDUINO_SDK_VERSION}
                         -mmcu=${${BOARD_ID}.build.mcu}
                         )
