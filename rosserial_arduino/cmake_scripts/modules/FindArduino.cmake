@@ -258,6 +258,7 @@ macro(setup_arduino_compiler BOARD_ID)
         set(BOARD_CORE_PATH ${ARDUINO_CORES_PATH}/${BOARD_CORE})
         include_directories(${BOARD_CORE_PATH})
         include_directories(${ARDUINO_LIBRARIES_PATH})
+        include_directories(${ARDUINO_SKETCHBOOK_PATH})
         add_definitions(-Os -fdata-sections -ffunction-sections
                         -DF_CPU=${${BOARD_ID}.build.f_cpu}
                         -DARDUINO=${ARDUINO_SDK_VERSION}
@@ -337,7 +338,10 @@ function(find_arduino_libraries VAR_NAME SRCS)
         foreach(SRC_LINE ${SRC_CONTENTS})
             if(SRC_LINE MATCHES "^ *#include *[<\"](.*)[>\"]")
                 get_filename_component(INCLUDE_NAME ${CMAKE_MATCH_1} NAME_WE)
-                foreach(LIB_SEARCH_PATH ${ARDUINO_LIBRARIES_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
+                foreach(LIB_SEARCH_PATH
+                        ${ARDUINO_LIBRARIES_PATH}
+                        ${ARDUINO_SKETCHBOOK_PATH}
+                        ${CMAKE_CURRENT_SOURCE_DIR})
                     if(EXISTS ${LIB_SEARCH_PATH}/${INCLUDE_NAME}/${CMAKE_MATCH_1})
                         list(APPEND ARDUINO_LIBS ${LIB_SEARCH_PATH}/${INCLUDE_NAME})
                         break()
@@ -546,6 +550,12 @@ message(STATUS "The arduino sdk path is ${ARDUINO_SDK_PATH}")
               NAMES libraries
               PATHS ${ARDUINO_SDK_PATH})
 
+    find_file(ARDUINO_SKETCHBOOK_PATH
+              NAMES libraries
+              PATHS ${ARDUINO_SKETCHBOOK_PATH}
+                    "$ENV{HOME}"/sketchbook
+                    ${ARDUINO_SDK_PATH})
+
     find_file(ARDUINO_BOARDS_PATH
               NAMES boards.txt
               PATHS ${ARDUINO_SDK_PATH}
@@ -596,6 +606,7 @@ message(STATUS "The arduino sdk path is ${ARDUINO_SDK_PATH}")
      mark_as_advanced(ARDUINO_CORES_PATH
                       ARDUINO_SDK_VERSION
                       ARDUINO_LIBRARIES_PATH
+                      ARDUINO_SKETCHBOOK_PATH
                       ARDUINO_BOARDS_PATH
                       ARDUINO_PROGRAMMERS_PATH
                       ARDUINO_REVISIONS_PATH
