@@ -1,0 +1,10 @@
+build
+*_gen
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+*.class
+*.elf
+*.eep
+*.hex
+*.pyc
