@@ -2,7 +2,11 @@
  * Echoes float64 messages.
  */
 
+#if defined(ARDUINO) && ARDUINO >= 100
+#include <Arduino.h>
+#else
 #include <WProgram.h>
+#endif  // Arduino 1.0+
 
 #include "arduino_hardware.h"
 #include "ros/node_handle.h"
